@@ -1,0 +1,42 @@
+.alert-container{
+  position: relative;
+  z-index: 999;
+}
+.alert {
+  position: fixed;
+  min-width: 200px;
+  z-index: 99999;
+  box-shadow: 0px 0px 9px 2px #b9b9b9;
+  right: 25px;
+  top: 85%;
+}
+.alert.alert-success{
+  background: #acf19e;
+}
+.alert.alert-danger{
+  background: #f19e9e;
+}
+.alert span.alert-message {
+  padding: 20px 20px;
+  display: block;
+  color: #4e4d4ddb;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.alert button.alert-close {
+  position: absolute;
+  right: 5px;
+  background: none;
+  font-weight: bold;
+  border: none;
+  font-size: 20px;
+  color: #505050;
+  cursor: pointer;
+  top: 1px;
+  transition: all .15s ease-in-out;
+}
+.alert button.alert-close:hover{
+  color:#666666;
+  font-size: 22px;
+}

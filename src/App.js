@@ -1,25 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { isLoaded } from "react-redux-firebase";
+import { useSelector } from "react-redux";
+import { history } from "./history";
+//import BrowserRouter Component
+import NavBar from "./components/layouts/NavBar";
+
+import GloablChildComponents from "./components/GloablChildComponents";
+import ROOTPRELOADER from "./components/childs/Preloader/ROOTPRELOADER";
+import Routes from "./routes";
+import { Router } from "react-router-dom";
 
 function App() {
+  const auth = useSelector(state => state.firebase.auth);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <React.Fragment>
+      {isLoaded(auth) ? (
+        <div className="animated fadeIn fastest">
+          <Router history={history}>
+            <NavBar />
+            <GloablChildComponents />
+            <div
+              style={{
+                marginTop: 60
+              }}
+            >
+              <Routes />
+            </div>
+          </Router>
+        </div>
+      ) : (
+        <ROOTPRELOADER />
+      )}
+    </React.Fragment>
   );
 }
 
