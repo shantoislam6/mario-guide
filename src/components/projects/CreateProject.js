@@ -5,6 +5,7 @@ import { SubmitButton } from "../childs/button";
 import { flash } from "../childs/FlashMessage";
 
 const CreateProject = props => {
+   document.title = 'Create Project-Mario Plan';
   const dispatch = useDispatch();
 
   const titleRef = useRef();

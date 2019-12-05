@@ -10,6 +10,7 @@ import { PreloaderTemplate } from "../childs/Preloader";
 import useFirestoreStateCount from "../hooks/useFireStoreStateCount";
 
 const EditProject = props => {
+  document.title = 'Update Project-Mario Plan';
   // Use Hooks
   const dispatch = useDispatch();
   const modal = useModal();

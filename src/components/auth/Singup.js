@@ -5,6 +5,7 @@ import { flash } from "../childs/FlashMessage";
 import { signUp } from "../../store/actions/authActions";
 import { SubmitButton } from "../childs/button";
 const Singup = () => {
+  document.title = 'Sign Up - Mario Plan';
   const dispatch = useDispatch();
   const [firstName] = useInput("");
   const [lastName] = useInput("");

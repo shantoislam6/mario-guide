@@ -6,6 +6,7 @@ import { flash } from "../childs/FlashMessage";
 import { SubmitButton } from "../childs/button";
 
 const SignIn = (props) => {
+  document.title = 'Sign In - Mario Plan';
   const dispatch = useDispatch();
   const [email] = useInput("");
   const [password] = useInput("");

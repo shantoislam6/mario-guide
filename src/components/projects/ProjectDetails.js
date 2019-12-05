@@ -14,10 +14,12 @@ const ProjectDetails = props => {
   const history = useHistory();
   const { uid } = useSelector(state => state.firebase.auth);
   const firestoreStateCount = useFirestoreStateCount();
-
+  
   useEffect(() => {
     if (project !== undefined && firestoreStateCount > 0 && project == null) {
       history.push("/dashboard/myprojects");
+    }else if(project !== undefined && firestoreStateCount > 0 ){
+      document.title = project.title +'-Mario Plan';
     }
   });
 
@@ -41,9 +43,11 @@ const ProjectDetails = props => {
               <p>{project.content}</p>
             </div>
             <div className="card-action  grey-text ">
-              <div>Posted By The {project.uFirstName} {project.uLastName}</div>
               <div>
-                <Moment  fromNow>{project.created_at}</Moment>
+                Posted By The {project.uFirstName} {project.uLastName}
+              </div>
+              <div>
+                <Moment fromNow>{project.created_at}</Moment>
               </div>
             </div>
             {uid === project.uid ? (

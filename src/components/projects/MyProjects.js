@@ -15,7 +15,7 @@ const MyProjects = () => {
       uid: uid,
     }
   ]);
-
+  document.title = 'My Projects-Mario Plan';
   const projects = useSelector(state => state.firestore.ordered.projects);
 
   return (

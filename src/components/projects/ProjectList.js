@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { useFirestoreConnect, getFirebase } from "react-redux-firebase";
 
 const ProjectList = () => {
+  document.title = 'Mario Plan';
   const firestoreStateCount = useFirestoreStateCount();
   useFirestoreConnect([
     {
