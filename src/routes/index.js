@@ -16,15 +16,9 @@ const ProtectedRoute = ({
   isProtected,
   redirectPath,
   children,
-  flashMessage,
+ 
   ...rest
 }) => {
-  const { loginLogOutHanlded } = useSelector(state => state.authState);
-  React.useEffect(() => {
-    if (!isProtected && !loginLogOutHanlded && flashMessage) {
-      flash(flashMessage);
-    }
-  });
 
   return (
     <Route
@@ -48,6 +42,7 @@ const ProtectedRoute = ({
 const Routes = () => {
   const auth = useSelector(state => state.firebase.auth);
 
+
   return (
     <React.Fragment>
       <Switch>
@@ -70,10 +65,6 @@ const Routes = () => {
           isProtected={auth.isEmpty}
           redirectPath={"/"}
           path="/user"
-          flashMessage={{
-            type: "danger",
-            message: "You are already logged in!!"
-          }}
         >
           <Switch>
             <Route path="/user/signin" component={SignIn} />
@@ -86,20 +77,12 @@ const Routes = () => {
           isProtected={!auth.isEmpty}
           redirectPath="/user/signin"
           path="/"
-          flashMessage={{
-            type: "danger",
-            message: "You must be log in first!!"
-          }}
         >
           <Switch>
             <ProtectedRoute
               path="/email/verify"
-              isProtected={!auth.emailVerified}
+              isProtected={!auth.emailVerified && auth.phoneNumber === null}
               render={EmailVerfication}
-              flashMessage={{
-                type: "danger",
-                message: "Please verify your email!!"
-              }}
             >
               <Route path="/email/verify" component={EmailVerfication} />
             </ProtectedRoute>
@@ -107,11 +90,7 @@ const Routes = () => {
             <ProtectedRoute
               path="/"
               redirectPath="/email/verify"
-              isProtected={auth.emailVerified}
-              flashMessage={{
-                type: "danger",
-                message: "Please verified Your Email!!"
-              }}
+              isProtected={auth.emailVerified || auth.phoneNumber !== null }
             >
               <Switch>
                 <Redirect from="/" exact to="/dashboard" />

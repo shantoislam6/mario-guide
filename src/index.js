@@ -5,7 +5,6 @@ import "./animate.css";
 import App from "./App";
 import Provider from "./providers/";
 
-
 ReactDOM.render(
   <Provider>
       <App />

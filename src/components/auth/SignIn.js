@@ -4,9 +4,10 @@ import { signIn } from "../../store/actions/authActions";
 import { useDispatch } from "react-redux";
 import { flash } from "../childs/FlashMessage";
 import { SubmitButton } from "../childs/button";
+import ApiBasedAuth from './ApiBasedAuth';
 
-const SignIn = (props) => {
-  document.title = 'Sign In - Mario Plan';
+const SignIn = props => {
+  document.title = "Sign In - Mario Plan";
   const dispatch = useDispatch();
   const [email] = useInput("");
   const [password] = useInput("");
@@ -44,32 +45,35 @@ const SignIn = (props) => {
   return (
     <div className="container">
       <div className="row">
-        <form
+        <div
           style={{ marginTop: "50px", padding: "30px" }}
           className="white offset-m2 offset-s0 col s12 m8 animated fadeIn faster"
-          onSubmit={signInHandler}
         >
-          <h3 className="grey-text center text-darken-3">Sign In</h3>
-          <div className="input-field">
-            <i className="material-icons prefix">email</i>
-            <input placeholder="Email" {...email} type="email" id="email" />
-          </div>
-          <div className="input-field">
-            <i className="material-icons prefix">https</i>
-            <input
-              type="password"
-              placeholder="password"
-              {...password}
-              id="password"
-              autoComplete="true"
-            />
-          </div>
-          <div className="input-field">
-            <SubmitButton async={true} style={{ marginLeft: "45px" }}>
-              Sign In
-            </SubmitButton>
-          </div>
-        </form>
+          <form onSubmit={signInHandler}>
+            <h3 className="grey-text center text-darken-3">Sign In</h3>
+            <div className="input-field">
+              <i className="material-icons prefix">email</i>
+              <input placeholder="Email" {...email} type="email" id="email" />
+            </div>
+            <div className="input-field">
+              <i className="material-icons prefix">https</i>
+              <input
+                type="password"
+                placeholder="password"
+                {...password}
+                id="password"
+                autoComplete="true"
+              />
+            </div>
+            <div className="input-field">
+              <SubmitButton async={true} style={{ marginLeft: "45px" }}>
+                Sign In
+              </SubmitButton>
+            </div>
+            <hr style={{ border: "1px solid #ddd" }} />
+          </form>
+          <ApiBasedAuth />
+        </div>
       </div>
     </div>
   );

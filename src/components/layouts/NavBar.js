@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 const NavBar = () => {
   const auth = useSelector(state => state.firebase.auth);
-  const profile = useSelector(state=> state.firebase.profile);
+
   return (
     <nav className="nav-wrapper z-depth grey darken-3" style={{
       position: 'fixed',
@@ -20,7 +20,7 @@ const NavBar = () => {
         </Link>
         <ul className="right menu">
           <div className="animated fadeIn fastest">
-              {!auth.isEmpty ? <SigninLinks isVerified={auth.emailVerified} profile={profile} /> : <SignoutLinks />}
+              {!auth.isEmpty ? <SigninLinks isVerified={auth.emailVerified} /> : <SignoutLinks />}
           </div>
         </ul>
       </div>

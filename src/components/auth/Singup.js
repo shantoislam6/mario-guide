@@ -26,8 +26,7 @@ const Singup = () => {
         if (password.value === confirmPassword.value) {
           dispatch(
             signUp({
-              firstName: firstName.value,
-              lastName: lastName.value,
+              displayName: firstName.value + lastName.value,
               email: email.value,
               password: password.value,
               fullName: firstName.value + ' ' + lastName.value,

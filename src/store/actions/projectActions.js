@@ -17,7 +17,7 @@ function authorizedHandler(uid1, uid2, executer) {
 // create project action
 export const createProject = project => {
   return (dispatch, getState, { getFirestore }) => {
-    const { profile } = getState().firebase;
+   
     const db = getFirestore();
     const { isAuthenticate, redirectToLogin, user, isVerified } = authInfo(getState);
     if (isAuthenticate && isVerified) {
@@ -32,8 +32,7 @@ export const createProject = project => {
           title: project.title,
           content: project.content,
           uid: user.uid,
-          uFirstName: profile.firstName,
-          uLastName: profile.lastName,
+          displayName:user.displayName,
           created_at: Date.now(),
           updated_at: Date.now()
         })

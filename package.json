@@ -9,6 +9,7 @@
     "react": "^16.11.0",
     "react-cache": "^2.0.0-alpha.1",
     "react-dom": "^16.11.0",
+    "react-firebaseui": "^4.0.0",
     "react-moment": "^0.9.6",
     "react-redux": "^7.1.1",
     "react-redux-firebase": "^3.0.5",

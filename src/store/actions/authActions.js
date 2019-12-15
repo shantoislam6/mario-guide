@@ -1,73 +1,61 @@
 import { history } from "../../history";
 import { flash } from "../../components/childs/FlashMessage";
-import authInfo from "../../helpers/authInfo";
 
 // Sign in action for existing users
 export const signIn = credentials => {
   return (dispatch, getState, { getFirebase }) => {
     const auth = getFirebase().auth();
-    const { isAuthenticate } = authInfo(getState);
-
     // pending request button loader
+    dispatch({
+      type: "ENABLE_BTN_SPINNER"
+    });
 
-    if (!isAuthenticate) {
-      dispatch({
-        type: "ENABLE_BTN_SPINNER"
-      });
-
-      auth
-        .signInWithEmailAndPassword(credentials.email, credentials.password)
-        .then(doc => {
-          dispatch({
-            type: "LOGIN_SUCCESS"
-          });
-
-          dispatch({
-            type: "DISABLE_BTN_SPINNER"
-          });
-
-          let urlPath = "/";
-          if (history.location.state) {
-            const historyState = history.location.state;
-            if (historyState.pathname === "/") {
-              urlPath = "/" + historyState.search;
-            } else {
-              urlPath = historyState.pathname + historyState.search;
-            }
-          }
-          history.push(urlPath);
-
-          flash(
-            {
-              type: "success",
-              message: "You Have Loggin In!!"
-            },
-            4000
-          );
-        })
-        .catch(err => {
-          dispatch({
-            type: "LOGIN_ERROR",
-            authMessage: err.message
-          });
-          dispatch({
-            type: "DISABLE_BTN_SPINNER"
-          });
-          flash(
-            {
-              type: "danger",
-              message: err.message
-            },
-            4000
-          );
+    auth
+      .signInWithEmailAndPassword(credentials.email, credentials.password)
+      .then(doc => {
+        dispatch({
+          type: "LOGIN_SUCCESS"
         });
-    } else {
-      history.push("/");
-      flash({
-        type: "danger",
-        message: "You are already logged In !!!"
+
+        dispatch({
+          type: "DISABLE_BTN_SPINNER"
+        });
+
+        let urlPath = "/";
+        if (history.location.state) {
+          const historyState = history.location.state;
+          if (historyState.pathname === "/") {
+            urlPath = "/" + historyState.search;
+          } else {
+            urlPath = historyState.pathname + historyState.search;
+          }
+        }
+        history.push(urlPath);
+
+        flash(
+          {
+            type: "success",
+            message: "You Have Loggin In!!"
+          },
+          4000
+        );
+      })
+      .catch(err => {
+        dispatch({
+          type: "LOGIN_ERROR",
+          authMessage: err.message
+        });
+        dispatch({
+          type: "DISABLE_BTN_SPINNER"
+        });
+        flash(
+          {
+            type: "danger",
+            message: err.message
+          },
+          4000
+        );
       });
-    }
   };
 };
 
@@ -76,52 +64,42 @@ export const signOut = () => {
   return (dispatch, getState, { getFirebase }) => {
     const auth = getFirebase().auth();
 
-    if (!getState().firebase.auth.isEmpty) {
-      //Pending request for logout loader
-      dispatch({
-        type: "ENABLE_SCREEN_PRELOADER"
-      });
-      auth
-        .signOut()
-        .then(() => {
-          dispatch({
-            type: "LOGGED_OUT"
-          });
-          dispatch({
-            type: "DISABLE_SCREEN_PRELOADER"
-          });
-          flash({
-            type: "success",
-            message: "You have logged out!!"
-          });
-
-          setTimeout(() => {
-            history.push("/user/signin");
-          }, 400);
-        })
-        .catch(err => {
-          dispatch({
-            type: "DISABLE_SCREEN_PRELOADER"
-          });
-          flash({
-            type: "danger",
-            message: err.message
-          });
+    //Pending request for logout loader
+    dispatch({
+      type: "ENABLE_SCREEN_PRELOADER"
+    });
+    auth
+      .signOut()
+      .then(() => {
+        dispatch({
+          type: "LOGGED_OUT"
         });
-    } else {
-      history.push("/");
-      flash({
-        type: "danger",
-        message: "You Have Already Logged Out!!"
+        dispatch({
+          type: "DISABLE_SCREEN_PRELOADER"
+        });
+        flash({
+          type: "success",
+          message: "You have logged out!!"
+        });
+
+        setTimeout(() => {
+          history.push("/user/signin");
+        }, 400);
+      })
+      .catch(err => {
+        dispatch({
+          type: "DISABLE_SCREEN_PRELOADER"
+        });
+        flash({
+          type: "danger",
+          message: err.message
+        });
       });
-    }
   };
 };
 
 export const signUp = signUpInfo => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
-    const functions = getFirebase().functions();
-
     const auth = getFirebase().auth();
     //Pending request for logout loader
     dispatch({
@@ -129,27 +107,50 @@ export const signUp = signUpInfo => {
     });
     auth
       .createUserWithEmailAndPassword(signUpInfo.email, signUpInfo.password)
-      .then(response => {
-          const createUser = functions.httpsCallable("createUser");
-          createUser({
-            email: signUpInfo.email,
-            firstName: signUpInfo.firstName,
-            lastName: signUpInfo.lastName,
-            initials: signUpInfo.initials,
-            uid: response.user.uid
+      .then(() => {
+        const user = getFirebase().auth().currentUser;
+        user
+          .updateProfile({
+            displayName: signUpInfo.displayName,
+            photoURL:
+              "https://us.v-cdn.net/6031128/uploads/defaultavatar/p632NH0JSAC5C.jpg"
           })
-            .then(result => {
-              dispatch(emailVerifier());
-            })
-            .catch(err => {
-              dispatch({
-                type: "DISABLE_BTN_SPINNER"
+          .then(function() {
+            const createUser = getFirebase()
+              .functions()
+              .httpsCallable("createUser");
+              createUser({
+                displayName:signUpInfo.displayName,
+                photoURL: "https://us.v-cdn.net/6031128/uploads/defaultavatar/p632NH0JSAC5C.jpg",
+                uid: user.uid,
+                providerId:null,
+                email: signUpInfo.email,
+                created_at: Date.now(),
+                phoneNumber:null,
+              })
+              .then(() => {
+                dispatch(emailVerifier());
+              })
+              .catch(err => {
+                flash({
+                  type: "danger",
+                  message: err.message
+                });
               });
-              flash({
-                type: "danger",
-                message: err.message
-              });
+          })
+          .catch(err => {
+            dispatch({
+              type: "DISABLE_BTN_SPINNER"
             });
+            dispatch({
+              type: "LOGIN_ERROR",
+              authMessage: err.message
+            });
+            flash({
+              type: "danger",
+              message: err.message
+            });
+          });
       })
       .catch(err => {
         dispatch({

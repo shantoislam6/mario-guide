@@ -1,8 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { useFirestoreConnect } from "react-redux-firebase";
+import { useFirestoreConnect, useFirebase } from "react-redux-firebase";
 import useFirestoreStateCount from "../hooks/useFireStoreStateCount";
 import Moment from "react-moment";
+import { Link} from "react-router-dom";
 
 const Notification = () => {
   const firestoreStateCount = useFirestoreStateCount();
@@ -24,7 +25,8 @@ const Notification = () => {
         width: "25%",
         top: 100
       }}
-    >
+    > 
+    <ProfileShow/>
       <div className="card z-depth-0">
         <div className="card-content">
           <span className="card-title">Notification</span>
@@ -62,7 +64,7 @@ const NotificationItems = ({ notifs }) => {
           <span className="pink-text">
             {noti.user.uid === uid
               ? "You"
-              : noti.user.firstName + " " + noti.user.lastName}{" "}
+              : noti.user.displayName}{" "}
           </span>
           <span>{noti.name} </span>
           <div className="grey-text note-date">
@@ -73,5 +75,17 @@ const NotificationItems = ({ notifs }) => {
     </>
   );
 };
+
+const ProfileShow = ()=>{
+  const profile = useSelector(state=> state.firebase.profile);
+  return (
+    <div className="pro-sec">
+      <span className="avater">
+        <Link to="/dashboard/myprojects"><img alt="null" src={profile.photoURL} /></Link>
+      </span>
+      <Link to="/dashboard/myprojects">{profile.displayName}</Link>
+    </div>
+  )
+}
 
 export default Notification;

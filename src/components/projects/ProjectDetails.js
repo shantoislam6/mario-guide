@@ -44,7 +44,7 @@ const ProjectDetails = props => {
             </div>
             <div className="card-action  grey-text ">
               <div>
-                Posted By The {project.uFirstName} {project.uLastName}
+                Posted By The {project.displayName}
               </div>
               <div>
                 <Moment fromNow>{project.created_at}</Moment>
